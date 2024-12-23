@@ -112,6 +112,24 @@
             .info-card {
                 margin-bottom: 1rem;
             }
+
+            .info-card h2 {
+                font-size: 1.5rem;
+            }
+
+            .info-item {
+                font-size: 0.9rem;
+                padding: 0.5rem;
+            }
+
+            .hack-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .status-bar {
+                font-size: 0.9rem;
+                padding: 0.8rem;
+            }
         }
 
         .matrix-bg {
@@ -183,7 +201,7 @@
             <div class="info-card">
                 <h2>معلومات الاتصال</h2>
                 <div class="info-item"><strong>العنوان:</strong> حي النخيل، الرياض</div>
-                <div class="info-item"><strong>الهاتف:</strong> +966 55 678 9101</div>
+                <div class="info-item"><strong>الهاتف:</strong> +966 50 621 0754</div>
                 <div class="info-item"><strong>البريد:</strong> Zot@darkweb.com</div>
                 <div class="info-item"><strong>موقع الخادم:</strong> مركز بيانات مهجور في شرق الرياض</div>
                 <div class="info-item"><strong>الحي:</strong> النخيل</div>
@@ -242,46 +260,45 @@
     </div>
 </body>
 
+<script>
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
 
-    <script>
-        const canvas = document.getElementById('matrixCanvas');
-        const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
+    const arabic = "١٢٣٤٥٦٧٨٩٠أبجدهوزحطيكلمنسعفصقرشتثخذضظغ";
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+
+    for (let x = 0; x < columns; x++)
+        drops[x] = 1;
+
+    function draw() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#0F0';
+        ctx.font = fontSize + 'px arial';
+
+        for (let i = 0; i < drops.length; i++) {
+            const text = arabic.charAt(Math.floor(Math.random() * arabic.length));
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+                drops[i] = 0;
+
+            drops[i]++;
+        }
+    }
+
+    setInterval(draw, 33);
+
+    window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
-        const arabic = "١٢٣٤٥٦٧٨٩٠أبجدهوزحطيكلمنسعفصقرشتثخذضظغ";
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = [];
-
-        for (let x = 0; x < columns; x++)
-            drops[x] = 1;
-
-        function draw() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = '#0F0';
-            ctx.font = fontSize + 'px arial';
-
-            for (let i = 0; i < drops.length; i++) {
-                const text = arabic.charAt(Math.floor(Math.random() * arabic.length));
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
-                    drops[i] = 0;
-
-                drops[i]++;
-            }
-        }
-
-        setInterval(draw, 33);
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-    </script>
+    });
+</script>
 </body>
 </html>
