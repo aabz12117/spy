@@ -28,6 +28,7 @@
             align-items: center;
             overflow-x: hidden;
             position: relative;
+            padding: 1rem; /* تحسين المسافات في الهواتف */
         }
 
         .logo-container {
@@ -38,7 +39,8 @@
         }
 
         .logo {
-            width: 80px;
+            width: 20vw; /* تحجيم الشعار للهواتف */
+            max-width: 80px;
             height: auto;
             filter: drop-shadow(0 0 5px var(--neon-color));
         }
@@ -61,21 +63,21 @@
         }
 
         .container {
-            width: 90%;
+            width: 100%;
             max-width: 600px;
             background: rgba(0, 15, 15, 0.9);
             border: 1px solid var(--neon-color);
             border-radius: 10px;
-            padding: 2rem;
+            padding: 1.5rem; /* تقليل المسافات لتناسب الهاتف */
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
             position: relative;
             overflow: hidden;
+            text-align: center;
         }
 
         .glitch-text {
-            font-size: 2rem;
-            text-align: center;
-            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
             position: relative;
             text-shadow: 
                 2px 2px var(--error-color),
@@ -85,9 +87,8 @@
 
         .description {
             font-size: 1.1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             line-height: 1.6;
-            text-align: center;
         }
 
         .start-button {
@@ -120,13 +121,13 @@
             background: rgba(0, 20, 20, 0.95);
             border: 1px solid var(--neon-color);
             border-radius: 10px;
-            padding: 2rem;
+            padding: 1.5rem;
             z-index: 1000;
         }
 
         .david-image {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             margin: 20px auto;
             display: block;
@@ -213,6 +214,32 @@
                             2px 2px var(--neon-color);
             }
         }
+
+        @media (max-width: 768px) {
+            .glitch-text {
+                font-size: 1.5rem;
+            }
+            .start-button {
+                font-size: 1rem;
+                padding: 0.8rem;
+            }
+            .description {
+                font-size: 1rem;
+            }
+            .popup {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+            }
+            .logo {
+                width: 25vw;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -233,7 +260,6 @@
             <p>الهدف: اختراق هاتف شخص يدعى <strong>ديفيد</strong></p>
             <p>ديفيد هو عنصر مشبوه يحاول التلاعب بكأس العالم 2034 في السعودية.</p>
             <p>المهمة: اختراق هاتفه للحصول على معلومات حيوية تكشف عن موقعه قبل تنفيذ خطته.</p>
-            <p>معلومات إضافية: لدينا معلومات تؤكد محاولته اختراق النظام الأمني لكأس العالم.</p>
             <p>درجة الخطورة: قصوى</p>
             <p>الوقت المتاح: 48 ساعة</p>
         </div>
@@ -253,27 +279,31 @@
     <script>
         function openPopup() {
             document.getElementById("popup").style.display = "block";
+            playSound('popup');
         }
 
         function closePopup() {
             document.getElementById("popup").style.display = "none";
+            playSound('cancel');
         }
 
         function startMission() {
-            document.getElementById("loading-screen").style.display = "flex"; // إظهار شاشة التحميل
+            document.getElementById("loading-screen").style.display = "flex"; 
+            playSound('start');
             setTimeout(() => {
-                window.location.href = "mission_page.html"; // الانتقال إلى الصفحة التالية
-            }, 4000); // تأخير لمدة 4 ثواني ليظهر تأثير شاشة التحميل
+                window.location.href = "mission_page.html"; 
+            }, 4000); 
         }
 
-        // إضافة تأثيرات صوتية عند النقر على الأزرار
-        document.querySelectorAll('button').forEach(button => {
-            button.addEventListener('click', () => {
-                const audio = new Audio();
-                audio.src = 'data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//OEAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAADAAAGhgBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVWqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr///////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAYAAAAAAAAABoYPqzTzAAAAAAD/+9DEAAAKmRVxtBEAIwpEKj89gAEERE9UxBTUUzLjk5LjWqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqg=='; // استبدل بـ مسار الصوت
-                audio.play();
-            });
-        });
+        function playSound(type) {
+            const sounds = {
+                popup: "sound/popup.mp3",
+                cancel: "sound/cancel.mp3",
+                start: "sound/start.mp3"
+            };
+            const audio = new Audio(sounds[type]);
+            audio.play();
+        }
     </script>
 </body>
 </html>
