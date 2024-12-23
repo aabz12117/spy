@@ -139,6 +139,33 @@
         .shake {
             animation: shake 0.5s ease-in-out;
         }
+
+        /* تحسين التوافق مع الهواتف */
+        @media (max-width: 600px) {
+            .phone-container {
+                padding: 15px;
+                max-width: 320px;
+            }
+
+            #passwordField {
+                font-size: 28px;
+                letter-spacing: 10px;
+            }
+
+            .key {
+                font-size: 1.2em;
+                padding: 15px;
+            }
+
+            .submit-button {
+                font-size: 1.1em;
+                padding: 10px 30px;
+            }
+
+            .keypad {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
@@ -175,10 +202,20 @@
     <script>
         let password = '';
 
+        // إضافة أصوات
+        const correctSound = new Audio('correct.mp3');  // تأكد من إضافة الملف
+        const wrongSound = new Audio('wrong.mp3');      // تأكد من إضافة الملف
+        const buttonClickSound = new Audio('click.mp3'); // تأكد من إضافة الملف
+
+        function playSound(sound) {
+            sound.play();
+        }
+
         function enterNumber(number) {
             if (password.length < 4) {
                 password += number;
                 updateDisplay();
+                playSound(buttonClickSound); // صوت عند الضغط على زر
             }
         }
 
@@ -186,12 +223,14 @@
             if (password.length > 0) {
                 password = password.slice(0, -1);
                 updateDisplay();
+                playSound(buttonClickSound); // صوت عند الضغط على زر
             }
         }
 
         function clearAll() {
             password = '';
             updateDisplay();
+            playSound(buttonClickSound); // صوت عند الضغط على زر
         }
 
         function updateDisplay() {
@@ -212,6 +251,7 @@
             }
 
             if (password === "2034") {
+                playSound(correctSound); // صوت النجاح
                 phoneContainer.innerHTML = `
                     <div class="loading-container">
                         <h2>جاري التحميل...</h2>
@@ -222,6 +262,7 @@
                 `;
                 startProgressBar();
             } else {
+                playSound(wrongSound); // صوت الخطأ
                 document.querySelector('.phone-container').classList.add('shake');
                 setTimeout(() => {
                     document.querySelector('.phone-container').classList.remove('shake');
