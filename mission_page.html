@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مهمة اختراق</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a, #2c3e50);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .phone-container {
+            width: 90%;
+            max-width: 380px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h2 {
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .password-display {
+            margin: 25px 0;
+            background: rgba(0, 255, 0, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+        }
+
+        #passwordField {
+            font-size: 32px;
+            font-family: monospace;
+            letter-spacing: 15px;
+            color: #00ff00;
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .key {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 15px;
+            font-size: 1.5em;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #00ff00;
+        }
+
+        .key:hover {
+            background: rgba(0, 255, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        .key:active {
+            transform: scale(0.95);
+            background: rgba(0, 255, 0, 0.3);
+        }
+
+        .submit-button {
+            background: linear-gradient(45deg, #00ff00, #00cc00);
+            color: #000;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1.2em;
+            margin-top: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .submit-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        .loading-container {
+            text-align: center;
+            color: #00ff00;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 10px;
+            margin-top: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress {
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #00cc00);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+            transition: width 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="content">
+            <h2>أدخل كلمة المرور</h2>
+            <p>الرجاء إدخال كلمة المرور المؤلفة من 4 أرقام</p>
+
+            <div class="password-display">
+                <span id="passwordField">_ _ _ _</span>
+            </div>
+
+            <p id="errorMessage" class="error-message">كلمة المرور خاطئة، حاول مرة أخرى!</p>
+
+            <div class="keypad">
+                <button class="key" onclick="enterNumber(1)">1</button>
+                <button class="key" onclick="enterNumber(2)">2</button>
+                <button class="key" onclick="enterNumber(3)">3</button>
+                <button class="key" onclick="enterNumber(4)">4</button>
+                <button class="key" onclick="enterNumber(5)">5</button>
+                <button class="key" onclick="enterNumber(6)">6</button>
+                <button class="key" onclick="enterNumber(7)">7</button>
+                <button class="key" onclick="enterNumber(8)">8</button>
+                <button class="key" onclick="enterNumber(9)">9</button>
+                <button class="key" onclick="clearPassword()">مسح</button>
+                <button class="key" onclick="enterNumber(0)">0</button>
+                <button class="key" onclick="clearAll()">C</button>
+            </div>
+
+            <button id="submitPassword" class="submit-button">تحقق</button>
+        </div>
+    </div>
+
+    <script>
+        let password = '';
+
+        function enterNumber(number) {
+            if (password.length < 4) {
+                password += number;
+                updateDisplay();
+            }
+        }
+
+        function clearPassword() {
+            if (password.length > 0) {
+                password = password.slice(0, -1);
+                updateDisplay();
+            }
+        }
+
+        function clearAll() {
+            password = '';
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            const display = document.getElementById('passwordField');
+            display.textContent = password.padEnd(4, ' _');
+        }
+
+        const submitButton = document.getElementById("submitPassword");
+        const phoneContainer = document.querySelector('.phone-container');
+
+        submitButton.addEventListener("click", function() {
+            const errorMessage = document.getElementById("errorMessage");
+            errorMessage.style.display = "none";
+
+            if (password.length !== 4) {
+                alert("الرجاء إدخال 4 أرقام");
+                return;
+            }
+
+            if (password === "2034") {
+                phoneContainer.innerHTML = `
+                    <div class="loading-container">
+                        <h2>جاري التحميل...</h2>
+                        <div class="progress-bar">
+                            <div class="progress"></div>
+                        </div>
+                    </div>
+                `;
+                startProgressBar();
+            } else {
+                document.querySelector('.phone-container').classList.add('shake');
+                setTimeout(() => {
+                    document.querySelector('.phone-container').classList.remove('shake');
+                }, 500);
+                errorMessage.style.display = "block";
+            }
+        });
+
+        function startProgressBar() {
+            const progressBar = document.querySelector('.progress');
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    window.location.href = "hack_success.html";  // انتقال إلى الصفحة الجديدة عند انتهاء التقدم
+                } else {
+                    width += 1;
+                    progressBar.style.width = width + '%';
+                }
+            }, 30);
+        }
+    </script>
+</body>
+</html>
